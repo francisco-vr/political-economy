@@ -1,0 +1,84 @@
+---
+title: "Análisis de votante pivotal y comisiones en la Convención constitucional. El caso de la comisión 'Forma del Estado'"
+author: "Francisco Villarroel"
+date: "2022-11-22"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results = 'asis')
+```
+
+## Introducción
+
+En el siguiente trabajo de analizará el desempeño que tuvo la comisión "forma del Estado" dentro de la convención constitucional. Sabemos que la convención tenía pocas reglas y tuvo que conformarse desde el primer día con intensos procesos de deliberación y votación entre los consituyentes, los cuales ocuparon una parte importante en la construcción de la estructura organizacional. Sus principales mecanismos fue el de construcción de comisiones con regla de voto por mayoría simple y votación en pleno bajo votación de 2/3.
+
+
+
+## Propuesta de análisis y métodos
+
+Para observar si la comisión 
+
+
+
+### Análisis de la comisión "Forma del Estado"
+
+
+#### Lista de constituyentes de subcomisión 1:
+
+| Constituyente            |       Lista                 |
+|--------------------------|-----------------------------|
+| Tiare Aguilera           | Pueblos Originarios         | 
+| Amaya Alvez              |  Apruebo Dignidad           | 
+| Adriana Ampuero          |        Otros                | 
+| Cristobal Andrade        |  Lista del Pueblo           | 
+| Wilfredo Bacian          |            PP.OO            | 
+| Elisa Giustinianovich    | Mov. Sociales Constituyentes| 
+| Claudio Gómez Castro     |    Lista del Apruebo        | 
+| Harry Jürguensen         |         Vamos Chile         | 
+| Jeniffer Mella           |     Apruebo Dignidad        | 
+| Felipe Mena              |        Vamos Chile          | 
+| Geoconda Navarrete       |    Vamos Chile              | 
+| Tammy Pustilnick         |Independientes No Neutrales  | 
+| Pollyana Rivera          |  Vamos Chile                | 
+| Hernán Velásquez         |  Apruebo Dignidad           | 
+
+
+
+Lista de participantes de subcomision 2:
+
+
+| Constituyente            |       Lista                 |
+|--------------------------|-----------------------------|
+| Julio Álvarez            |  Lista del Apruebo          | 
+| Jorge Arancibia          |    Vamos Chile              | 
+| Eduardo Castillo         |  Lista del Apruebo          | 
+| Eric Chinga              | Pueblo Constituyente/ PP.OO | 
+| Yarela Gómez             |  Apruebo Dignidad           |  
+| Álvaro Jofré             |         Vamos Chile         | 
+| Helmuth Martínez         |    Lista del Pueblo (?)     |
+| Adolfo Millabur          |        PP.OO                |
+| Bastian Labbé            |Mov. Sociales Constituyentes |
+| María Reyes Painequeo    |    Lista del Apruebo        |
+| César Uribe              |     Lista del Pueblo        | 
+
+
+
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+### Análisis del pleno de la Convención Constitucional
+
+
+
+
+### Comparación de éxito entre comisión y pleno
+
+
+## Conclusiones
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
