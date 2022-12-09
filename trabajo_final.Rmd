@@ -17,11 +17,15 @@ En el siguiente trabajo de analizará el desempeño que tuvo la comisión "forma
 
 ## Propuesta de análisis y métodos
 
-Para observar si la comisión 
+Para observar si la comisión tuvo efecto en imponer su vision en el pleno de la convencion, primero observaremos la composicion ideologica de la comision en general y de las subcomisiones en particular. luego de ello analizaremos la composicion ideologica del pleno y observadremos las diferencias entre lña posicion ideologica del votante medio y pivotal, respectivamente.
 
+Luego se realizará un análisis del éxito de la comisión en base a las votaciones a favor en el pleno.
 
 
 ### Análisis de la comisión "Forma del Estado"
+
+La comisión "formas del Estado" está compuesta por dos subcomisiones, en las cuales se trataron cuestiones como descentralización, división política, autonomía territoriales, justicia territorial, gobierno local, modernización del estado, democratización del poder, etc. La composición de cada una de las dos subcomisiones está expuesta a continuaciòn: 
+
 
 
 #### Lista de constituyentes de subcomisión 1:
@@ -45,7 +49,7 @@ Para observar si la comisión
 
 
 
-Lista de participantes de subcomision 2:
+#### Lista de participantes de subcomision 2:
 
 
 | Constituyente            |       Lista                 |
@@ -62,17 +66,74 @@ Lista de participantes de subcomision 2:
 | María Reyes Painequeo    |    Lista del Apruebo        |
 | César Uribe              |     Lista del Pueblo        | 
 
+### Estimaciones ideológicas por comisión general y subcomisiones:
+
+
+#### Análisis subcomisión 1
 
 
 
+```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+knitr::include_graphics("Results/plot_comision_1d.png")
 ```
 
+
+
+
+```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
+
+knitr::include_graphics("Results/Plot_Subcom1.png")
+```
+
+
+#### Análisis subcomisión 2
+
+
+```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
+
+knitr::include_graphics("Results/Plot_subcom2_basic.png")
+
+```
+
+
+
+
+
+```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
+
+knitr::include_graphics("Results/Plot_Subcom2.png")
+
+```
+
+#### Análisis comisión de forma general
+
+
+
+```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
+
+knitr::include_graphics("Results/plot_comision_1d.png")
+
+```
+
+
+```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
+
+
+knitr::include_graphics("Results/plot_comision_2d.png")
+
+```
+
+```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
+
+knitr::include_graphics("Results/Plot_comision_general.png")
+
+```
+
+
+
+
 ### Análisis del pleno de la Convención Constitucional
-
-
 
 
 ### Comparación de éxito entre comisión y pleno

@@ -12,7 +12,7 @@ ipak <- function(pkg){
 
 # usage
 
-packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable")
+packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable", "modelsummary")
 ipak(packages)
 
 entrada <-read_csv("data/Input_data/votos_comision_Forma de Estado.csv")
@@ -21,10 +21,21 @@ entrada <-read_csv("data/Input_data/votos_comision_Forma de Estado.csv")
 comision <-dplyr::filter(entrada, (`8706` != (1 | 0)) | (`7733` != (1|0)) | (`7697` != (1 | 0)) | (`8686` !=(1 | 0)) |(`8697` != (1 | 0)))
 
 
+## Crear subcomision 1
+
+subcom1 <-comision[c(1,3,4,5,7,10,11,14,16,17,19,20,23,25),]
+
+subcom2 <-comision[c(2,6,8,9,12,13,15,18,21,22,24),]
+
+## Crear subcomision 2
+
+
+
 xtable(as_tibble(print(comision$nombres)))
 
 saveRDS(comision, file = "data/Final_data/comision_final.RDS")
-
+saveRDS(subcom1, file = "data/Final_data/subcom1.RDS")
+saveRDS(subcom2, file = "data/Final_data/subcom2.RDS")
 
 # aqui trabajaremos con los la libreria wnominate
 # (weighted nominal three steps estimation)
@@ -37,6 +48,147 @@ saveRDS(comision, file = "data/Final_data/comision_final.RDS")
 # Los datos para estimar w-nominate pueden venir en varios formatos
 # aqui vemos el caso de comisiona base de datos en formato .csv
 # fuente voteview.com
+
+### ANÀLISIS SUBCOMISIÓN 1 ###
+
+# esta base contiene votaciones de los representantes de naciones comisionidas
+
+subcom1 <- readRDS("data/Final_data/subcom1.RDS")
+
+# preparamos la base de datos
+
+lista_subcom1 <-subcom1[,2]
+subcom1 <- subcom1[,-c(1,2)] # en la parte de datos solo deben quedar los votos
+
+# para correr wnominate se crea el objeto de clase rollcall
+# con la opcion F1 pueden ver el detalle de los elementos del objeto
+rc <- rollcall(subcom1,             
+               yea=1, 
+               nay=0,
+               missing=NA, # todos los otros datos quedan como missing
+               legis.names=lista_subcom1,
+               legis.data=NULL,
+               desc="")
+
+result_subcom1 <- wnominate(rc, dims=1, polarity=8)
+summary(result_subcom1) # el objeto results contiene la estimacion
+
+
+
+tabla_subcom1 <-data.frame(lista_subcom1,result_subcom1$legislators)
+tabla_subcom1 <-tabla_subcom1[,c(1,6,7,8)]
+tabla_subcom1 <-tabla_subcom1[order(tabla_subcom1$coord1D), c(1,2,3,4)]
+tabla_subcom1$rank <-rank(tabla_subcom1$coord1D)
+
+saveRDS(tabla_subcom1, file = "Results/tabla_subcom1.rds")
+
+
+xtable(tabla_subcom1)
+
+# APRE: Aggregated Proportional reduction of error.
+# GMP: Geometric mean probability
+# miden la mejora en la estimacion al pasar de comisiona a dos dimensiones
+
+plot(X1,type="n",asp=1,
+     xlab="1a dimension",
+     ylab="2a dimension",
+     xlim=c(-1.0,1.0),ylim=c(-1.0,1.0),font=2,cex=1.2)
+mtext("Estimación Ideológica comisión 'Forma del Estado', en Convención Constitucional",side=3,line=1.50,cex=1.2,font=2)
+points(X1[result$legislators$party == "Other"],X2[result$legislators$party == "Other"],pch=16,col="blue",font=2)
+points(X1[result$legislators$party == "WP"],X2[result$legislators$party == "WP"],pch=16,col="red",font=2)
+
+# el paquete trae por defecto la posibilidad de comision plot de los resultados
+plot(result)
+
+
+Plot_Subcom1 <-ggplot(tabla_subcom1, aes(x = coord1D, y = rank)) +
+  geom_point() +
+  geom_line()+
+  geom_text(label = tabla_subcom1$nombres, nudge_y = 0.3, check_overlap = T) +
+  labs(y = "Ranking",
+       x = "Coordenadas",
+       title= "Estimación Ideológica Subcomisión 1, Formas del Estado",
+       subtitle = "1 dimensión",
+       caption = "Línea roja: Votante mediano de la izquierda. Línea azul: Votante mediano de la derecha")+
+  geom_vline(xintercept = -0.7432000, colour = "red", linetype = "dashed")+
+  geom_vline(xintercept = -0.8328199, colour = "blue", linetype = "dashed")+
+  theme(axis.text = element_text(size = 15),
+        axis.title= element_text(size=16,face="bold"),
+        plot.title = element_text(size = 18, face = "bold"),
+        panel.grid.major = element_line(colour = "grey70", size = 0.2),
+        panel.grid.minor = element_blank())
+
+ggsave(Plot_Subcom1, filename = "Results/Plot_Subcom1.png",
+       dpi = 400, width = 15, height = 9)
+
+
+
+### ANALISIS SUBCOMISION 2 ###
+
+subcom2 <- readRDS("data/Final_data/subcom2.RDS")
+
+# preparamos la base de datos
+
+lista_subcom2 <-subcom2[,2]
+subcom2 <- subcom2[,-c(1,2)] # en la parte de datos solo deben quedar los votos
+
+# para correr wnominate se crea el objeto de clase rollcall
+# con la opcion F1 pueden ver el detalle de los elementos del objeto
+rc2 <- rollcall(subcom2,             
+               yea=1, 
+               nay=0,
+               missing=NA, # todos los otros datos quedan como missing
+               legis.names=lista_subcom2,
+               legis.data=NULL,
+               desc="")
+
+result_subcom2 <- wnominate(rc2, dims=1, polarity=6) #Se utiliza a alvaro Jofré cáceres como extremo por derecha para ordenar
+summary(result_subcom2) # el objeto results contiene la estimacion
+
+
+
+tabla_subcom2 <-data.frame(lista_subcom2,result_subcom2$legislators)
+tabla_subcom2 <-tabla_subcom2[,c(1,6,7,8)]
+tabla_subcom2 <-tabla_subcom2[order(tabla_subcom2$coord1D), c(1,2,3,4)]
+tabla_subcom2$rank <-rank(tabla_subcom2$coord1D)
+
+saveRDS(tabla_subcom2, file = "Results/tabla_subcom2.rds")
+
+
+xtable(tabla_subcom2)
+
+# APRE: Aggregated Proportional reduction of error.
+# GMP: Geometric mean probability
+# miden la mejora en la estimacion al pasar de comisiona a dos dimensiones
+
+
+# el paquete trae por defecto la posibilidad de comision plot de los resultados
+plot(result_subcom2)
+
+
+Plot_Subcom2 <-ggplot(tabla_subcom2, aes(x = coord1D, y = rank)) +
+  geom_point() +
+  geom_line()+
+  geom_text(label = tabla_subcom2$nombres, nudge_y = 0.3, check_overlap = T) +
+  labs(y = "Ranking",
+       x = "Coordenadas",
+       title= "Estimación Ideológica Subcomisión 2, Forma del Estado",
+       subtitle = "1 dimensión",
+       caption = "Línea naranja: votante mediano tanto para izquierda como derecha")+
+  geom_vline(xintercept = -0.55809736, colour = "orange", linetype = "dashed")+
+  theme(axis.text = element_text(size = 15),
+        axis.title= element_text(size=16,face="bold"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.caption = element_text(size = 14),
+        panel.grid.major = element_line(colour = "grey70", size = 0.2),
+        panel.grid.minor = element_blank())
+
+ggsave(Plot_Subcom2, filename = "Results/Plot_Subcom2.png",
+       dpi = 400, width = 15, height = 9)
+
+
+### ANÀLISIS COMISION FORMA DEL ESTADO GENERAL ####
+
 
 # esta base contiene votaciones de los representantes de naciones comisionidas
 
@@ -55,46 +207,55 @@ rc <- rollcall(comision,
                missing=NA, # todos los otros datos quedan como missing
                legis.names=nombre_perso,
                legis.data=NULL,
-               desc="comision 31 to 33")
+               desc="")
 
-result <- wnominate(rc, dims=1, polarity=14)
+result <- wnominate(rc, dims=1, polarity=14) # Se utilida a Harry Jurguensen como extremo por derecha
 summary(result) # el objeto results contiene la estimacion
-# APRE: Aggregated Proportional reduction of error.
-# GMP: Geometric mean probability
-# miden la mejora en la estimacion al pasar de comisiona a dos dimensiones
 
-names(result) # el objeto result contiene 7 objetos
-head(result$legislators)
-head(result$rollcalls)
-result$dimensions
-head(result$eigenvalues)
-result$beta
-result$weights
-result$fits
+comision_general <-data.frame(nombre_perso,result$legislators)
+comision_general <-comision_general[,c(1,6,7,8)]
+comision_general <-comision_general[order(comision_general$coord1D), c(1,2,3,4)]
+comision_general$rank <-rank(comision_general$coord1D)
 
-WEIGHT=(result$weights[2])/(result$weights[1]) # peso relativo dado a la segcomisionda dimension
-X1 <- result$legislators$coord1D   # primera dimension
-X2 <- (result$legislators$coord2D)*WEIGHT # segcomisionda dimension
-windows()
+saveRDS(comision_general, file = "Results/comision_general.rds")
 
-plot(X1,type="n",asp=1,
-     xlab="1a dimension",
-     ylab="2a dimension",
-     xlim=c(-1.0,1.0),ylim=c(-1.0,1.0),font=2,cex=1.2)
-mtext("Estimación Ideológica comisión 'Forma del Estado', en Convención Constitucional",side=3,line=1.50,cex=1.2,font=2)
-points(X1[result$legislators$party == "Other"],X2[result$legislators$party == "Other"],pch=16,col="blue",font=2)
-points(X1[result$legislators$party == "WP"],X2[result$legislators$party == "WP"],pch=16,col="red",font=2)
+
+xtable(comision_general, caption = "Tabla de comisión Forma del Estado, ordenada por estimación ideológica")
 
 # el paquete trae por defecto la posibilidad de comision plot de los resultados
+
 plot(result)
 
-table(result$beta)
+# Ploteo con más detalles:
+
+Plot_comision_general <-ggplot(comision_general, aes(x = coord1D, y = rank)) +
+  geom_point() +
+  geom_line()+
+  geom_text(label = comision_general$nombres, nudge_y = 0.3, check_overlap = T) +
+  labs(y = "Ranking",
+       x = "Coordenadas",
+       title= "Estimación Ideológica comision Forma del Estado",
+       subtitle = "1 dimensión",
+       caption = "Línea naranja: votante mediano tanto para izquierda como derecha")+
+  geom_vline(xintercept = -0.7040421, colour = "green", linetype = "dashed")+
+  theme(axis.text = element_text(size = 15),
+        axis.title= element_text(size=16,face="bold"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.caption = element_text(size = 14),
+        panel.grid.major = element_line(colour = "grey70", size = 0.2),
+        panel.grid.minor = element_blank())
+
+ggsave(Plot_comision_general, filename = "Results/Plot_comision_general.png",
+       dpi = 400, width = 15, height = 9)
 
 
-# tambien se puede separar para efectos de publicacion
-plot.coords(result) # separa por grupos
-plot.scree(result) # peso relativo de cada eigenvalue
-plot.cutlines(result, lines=5) # pcomisiontos de corte de cada proyecto
-plot.angles(result) # histograma de los pcomisiontos de corte por angulos
+## ANÁLISIS DEL PLENO COMPLETO
+
+pleno <-read_csv("data/Input_data/resumen_votos_para_rollcallApr_10.csv")
+
+
+
+
+
 
 
