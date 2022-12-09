@@ -83,7 +83,7 @@ tabla_subcom1$rank <-rank(tabla_subcom1$coord1D)
 saveRDS(tabla_subcom1, file = "Results/tabla_subcom1.rds")
 
 
-xtable(tabla_subcom1)
+xtable(tabla_subcom1, caption = "Tabla de estimación ideológica, Subcomisión 1")
 
 # APRE: Aggregated Proportional reduction of error.
 # GMP: Geometric mean probability
@@ -155,7 +155,7 @@ tabla_subcom2$rank <-rank(tabla_subcom2$coord1D)
 saveRDS(tabla_subcom2, file = "Results/tabla_subcom2.rds")
 
 
-xtable(tabla_subcom2)
+xtable(tabla_subcom2, caption = "Tabla de estimación ideológica de subcomisión 2, Forma del Estado")
 
 # APRE: Aggregated Proportional reduction of error.
 # GMP: Geometric mean probability
@@ -236,7 +236,7 @@ Plot_comision_general <-ggplot(comision_general, aes(x = coord1D, y = rank)) +
        x = "Coordenadas",
        title= "Estimación Ideológica comision Forma del Estado",
        subtitle = "1 dimensión",
-       caption = "Línea naranja: votante mediano tanto para izquierda como derecha")+
+       caption = "Línea verde: votante mediano tanto para izquierda como derecha")+
   geom_vline(xintercept = -0.7040421, colour = "green", linetype = "dashed")+
   theme(axis.text = element_text(size = 15),
         axis.title= element_text(size=16,face="bold"),
@@ -253,7 +253,56 @@ ggsave(Plot_comision_general, filename = "Results/Plot_comision_general.png",
 
 pleno <-read_csv("data/Input_data/resumen_votos_para_rollcallApr_10.csv")
 
+# preparamos la base de datos
 
+constituyente <-pleno[,2]
+pleno <- pleno[,-c(1,2)] # en la parte de datos solo deben quedar los votos
+
+# para correr wnominate se crea el objeto de clase rollcall
+# con la opcion F1 pueden ver el detalle de los elementos del objeto
+rc_pleno <- rollcall(pleno,             
+               yea=1, 
+               nay=0,
+               missing=NA, # todos los otros datos quedan como missing
+               legis.names=constituyente,
+               legis.data=NULL,
+               desc="")
+
+result <- wnominate(rc_pleno, dims=1, polarity=97) # Se utilida a Montealegre en base a la estimacion de Fabrega (2021)
+summary(result) # el objeto results contiene la estimacion
+
+pleno_general <-data.frame(constituyente,result$legislators)
+pleno_general <-pleno_general[,c(1,6,7,8)]
+pleno_general <-pleno_general[order(pleno_general$coord1D), c(1,2,3,4)]
+pleno_general$rank <-rank(as.numeric(pleno_general$coord1D))
+
+saveRDS(pleno_general, file = "Results/comision_general.rds")
+
+xtable(pleno_general)
+
+
+
+
+
+Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = as.numeric(rank))) +
+  geom_point()+ 
+  geom_line()+
+  geom_text(label = pleno_general$candidato, nudge_y = 0.3, check_overlap = T)+
+  labs(y = "Ranking",
+       x = "Coordenadas",
+       title= "Estimación Ideológica comision Forma del Estado",
+       subtitle = "1 dimensión",
+       caption = "Línea verde: votante mediano tanto para izquierda como derecha")+
+  geom_vline(xintercept = -0.33147427, colour = "green", linetype = "dashed")+
+  theme(axis.text = element_text(size = 15),
+        axis.title= element_text(size=16,face="bold"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.caption = element_text(size = 14),
+        panel.grid.major = element_line(colour = "grey70", size = 0.2),
+        panel.grid.minor = element_blank())
+
+ggsave(Plot_comision_general, filename = "Results/Plot_comision_general.png",
+       dpi = 400, width = 15, height = 9)
 
 
 
