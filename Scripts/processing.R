@@ -217,7 +217,7 @@ comision_general <-comision_general[,c(1,6,7,8)]
 comision_general <-comision_general[order(comision_general$coord1D), c(1,2,3,4)]
 comision_general$rank <-rank(comision_general$coord1D)
 
-saveRDS(comision_general, file = "Results/comision_general.rds")
+saveRDS(comision_general, file = "data/Final_data/comision_general.rds")
 
 
 xtable(comision_general, caption = "Tabla de comisión Forma del Estado, ordenada por estimación ideológica")
@@ -251,13 +251,14 @@ ggsave(Plot_comision_general, filename = "Results/Plot_comision_general.png",
 
 ## ANÁLISIS DEL PLENO COMPLETO
 
+
 pleno <-read_csv("data/Input_data/resumen_votos_para_rollcallApr_10.csv")
 
 
 # preparamos la base de datos
 
 constituyente <-pleno[,2]
-utf8_encoding(constituyente)
+tidyft::utf8_encoding(constituyente)
 
 
 pleno <- pleno[,-c(1,2)] # en la parte de datos solo deben quedar los votos
@@ -280,7 +281,7 @@ pleno_general <-pleno_general[,c(1,6,7,8)]
 pleno_general <-pleno_general[order(pleno_general$coord1D), c(1,2,3,4)]
 pleno_general$rank <-rank(as.numeric(pleno_general$coord1D))
 
-saveRDS(pleno_general, file = "Results/comision_general.rds")
+saveRDS(pleno_general, file = "data/Final_data/tabla_pleno.rds")
 
 knitr::kable(pleno_general)
 

@@ -1,103 +1,140 @@
 ---
-title: "Análisis de votante pivotal y comisiones en la Convención constitucional. El caso de la comisión 'Forma del Estado'"
+title: "**Análisis de votante pivotal y comisiones en la Convención constitucional**" 
+subtitle: "**El caso de la comisión 'Forma del Estado'**"
 author: "Francisco Villarroel"
 date: "2022-11-22"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results = 'asis')
 ```
 
-## Introducción
+```{r}
+library(tidyverse)
+library(kableExtra)
+```
+
+```{=html}
+<style>
+body {
+text-align: justify;
+font-size: 14pt}
+</style>
+```
+## **Introducción**
+
+<br>
 
 En el siguiente trabajo de analizará el desempeño que tuvo la comisión "forma del Estado" dentro de la convención constitucional. Sabemos que la convención tenía pocas reglas y tuvo que conformarse desde el primer día con intensos procesos de deliberación y votación entre los consituyentes, los cuales ocuparon una parte importante en la construcción de la estructura organizacional. Sus principales mecanismos fue el de construcción de comisiones con regla de voto por mayoría simple y votación en pleno bajo votación de 2/3.
 
+<br>
 
-
-## Propuesta de análisis y métodos
+## **Propuesta de análisis y métodos**
 
 Para observar si la comisión tuvo efecto en imponer su vision en el pleno de la convencion, primero observaremos la composicion ideologica de la comision en general y de las subcomisiones en particular. luego de ello analizaremos la composicion ideologica del pleno y observadremos las diferencias entre lña posicion ideologica del votante medio y pivotal, respectivamente.
 
 Luego se realizará un análisis del éxito de la comisión en base a las votaciones a favor en el pleno.
 
+<br>
 
-### Análisis de la comisión "Forma del Estado"
+### **Análisis de la comisión "Forma del Estado"**
 
-La comisión "formas del Estado" está compuesta por dos subcomisiones, en las cuales se trataron cuestiones como descentralización, división política, autonomía territoriales, justicia territorial, gobierno local, modernización del estado, democratización del poder, etc. La composición de cada una de las dos subcomisiones está expuesta a continuaciòn: 
+La comisión "formas del Estado" está compuesta por dos subcomisiones, en las cuales se trataron cuestiones como descentralización, división política, autonomía territoriales, justicia territorial, gobierno local, modernización del estado, democratización del poder, etc. La composición de cada una de las dos subcomisiones está expuesta a continuaciòn:
 
+<br>
 
+#### **Lista de constituyentes de subcomisión 1:**
 
-#### Lista de constituyentes de subcomisión 1:
+| Constituyente         | Lista                        |
+|-----------------------|------------------------------|
+| Tiare Aguilera        | Pueblos Originarios          |
+| Amaya Alvez           | Apruebo Dignidad             |
+| Adriana Ampuero       | Otros                        |
+| Cristobal Andrade     | Lista del Pueblo             |
+| Wilfredo Bacian       | PP.OO                        |
+| Elisa Giustinianovich | Mov. Sociales Constituyentes |
+| Claudio Gómez Castro  | Lista del Apruebo            |
+| Harry Jürguensen      | Vamos Chile                  |
+| Jeniffer Mella        | Apruebo Dignidad             |
+| Felipe Mena           | Vamos Chile                  |
+| Geoconda Navarrete    | Vamos Chile                  |
+| Tammy Pustilnick      | Independientes No Neutrales  |
+| Pollyana Rivera       | Vamos Chile                  |
+| Hernán Velásquez      | Apruebo Dignidad             |
 
-| Constituyente            |       Lista                 |
-|--------------------------|-----------------------------|
-| Tiare Aguilera           | Pueblos Originarios         | 
-| Amaya Alvez              |  Apruebo Dignidad           | 
-| Adriana Ampuero          |        Otros                | 
-| Cristobal Andrade        |  Lista del Pueblo           | 
-| Wilfredo Bacian          |            PP.OO            | 
-| Elisa Giustinianovich    | Mov. Sociales Constituyentes| 
-| Claudio Gómez Castro     |    Lista del Apruebo        | 
-| Harry Jürguensen         |         Vamos Chile         | 
-| Jeniffer Mella           |     Apruebo Dignidad        | 
-| Felipe Mena              |        Vamos Chile          | 
-| Geoconda Navarrete       |    Vamos Chile              | 
-| Tammy Pustilnick         |Independientes No Neutrales  | 
-| Pollyana Rivera          |  Vamos Chile                | 
-| Hernán Velásquez         |  Apruebo Dignidad           | 
+<br>
 
+#### **Lista de participantes de subcomision 2:**
 
+| **Constituyente**     | **Lista**                    |
+|-----------------------|------------------------------|
+| Julio Álvarez         | Lista del Apruebo            |
+| Jorge Arancibia       | Vamos Chile                  |
+| Eduardo Castillo      | Lista del Apruebo            |
+| Eric Chinga           | Pueblo Constituyente/ PP.OO  |
+| Yarela Gómez          | Apruebo Dignidad             |
+| Álvaro Jofré          | Vamos Chile                  |
+| Helmuth Martínez      | Lista del Pueblo (?)         |
+| Adolfo Millabur       | PP.OO                        |
+| Bastian Labbé         | Mov. Sociales Constituyentes |
+| María Reyes Painequeo | Lista del Apruebo            |
+| César Uribe           | Lista del Pueblo             |
 
-#### Lista de participantes de subcomision 2:
+<br> <br>
 
+### **Estimaciones ideológicas por comisión general y subcomisiones:**
 
-| Constituyente            |       Lista                 |
-|--------------------------|-----------------------------|
-| Julio Álvarez            |  Lista del Apruebo          | 
-| Jorge Arancibia          |    Vamos Chile              | 
-| Eduardo Castillo         |  Lista del Apruebo          | 
-| Eric Chinga              | Pueblo Constituyente/ PP.OO | 
-| Yarela Gómez             |  Apruebo Dignidad           |  
-| Álvaro Jofré             |         Vamos Chile         | 
-| Helmuth Martínez         |    Lista del Pueblo (?)     |
-| Adolfo Millabur          |        PP.OO                |
-| Bastian Labbé            |Mov. Sociales Constituyentes |
-| María Reyes Painequeo    |    Lista del Apruebo        |
-| César Uribe              |     Lista del Pueblo        | 
+<br>
 
-### Estimaciones ideológicas por comisión general y subcomisiones:
+#### **Análisis subcomisión 1**
 
+Para el análisis de la subcomisión 1 se tomó como referencia a Harry Jürguensen, quien según las estimaciones iniciales muestra la tendencia más marcada a la derecha de las disponiubles en esta subcomisión. Al probar estimaciones con una o dos estimaciones, vemos que la estimación con una sola dimensión da cuenta de manera robusta de la diferencia entre todos los convencionales de la subcomisión.
 
-#### Análisis subcomisión 1
-
-
+<br>
 
 ```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
 
 knitr::include_graphics("Results/plot_comision_1d.png")
 ```
 
+<br>
 
+Al revisar la tabla completa con todos los convencionales de la subcomisión, vemos que es bastante consistente tanto con las estimaciones generales hechas opr Jorge Fàbrega como por la agrupación ideológica que se veía a nivel cualitativo en la convención constitucional. Vemos que los opuestos principales son Wilfredo Bacian (Pueblos originarios, luego parte de la "Coordinadora Constituyente Plurinacional y Popular", creada entre ex-miembros de la lista del pueblo y Pueblos originarios) y Cristobal andráde, de La Lista del Pueblo. Por otro lado Harry Jürguensen tiene como par ideológico a Pollyana Rivera.
+
+<br>
 
 ```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="60%", fig.align='center'}
 
-knitr::include_graphics("Results/tabla_subcom1.png")
+tabla_subcom1 <-readRDS("data/Final_data/tabla_subcom1.rds")
+
+tabla_subcom1$coord1D = cell_spec(tabla_subcom1$coord1D, color = ifelse(tabla_subcom1$coord1D < 0, "red", "blue"))
+
+kbl(tabla_subcom1, escape = F) %>%
+  kable_paper("striped", full_width = F)
 
 ```
 
+<br>
 
+Examinando el nuevo gráfico que marca los votantes medianos, vemos que Thiare Aguilera tiene una alta revelancia para la izquierda, ya que es el punto de corte mínimo para poder ganar las votaciones de la subcomisión. En el caso de la derecha le votante medio está dado por Amaya Alvez y Elisa Gustinianovich que tienen la misma estimación ideológica.
 
-
+<br>
 
 ```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
 
 knitr::include_graphics("Results/Plot_Subcom1.png")
 ```
 
+<br>
 
-#### Análisis subcomisión 2
+A partir del gráfico podemos observar que para la izquierda le es relativamente fácil ganar cada decisión, pues están ideológicamente muy próximos todos los necesarios para ganar elecciones. No así la derecha que presenta una gran distancia ideológica incluso con sus más próximas como Tammy Pustilnik, por lo que es muy probable que ninguna o casi ningún artículo podría quedar en la propuesta que iría al pleno.
 
+<br>
+
+#### **Análisis subcomisión 2**
+
+Para el análisis de la subcomisión 2 se tomó como referencia por derecha a Álvaro Jofré Cáceres, persona que según las estimaciones iniciales era el más cercano ideológicamente a Harry Jürguensen. Vemos en el gráfico de la derecha que usar una sóla dimensión en vez de dos explica con bastante exactitud la dispersión ideológica
 
 ```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="80%", fig.align='center'}
 
@@ -105,15 +142,22 @@ knitr::include_graphics("Results/Plot_subcom2_basic.png")
 
 ```
 
+<br>
+
+Si observamos cómo se reparten ideológicamente tanto en la siguiente tabla como en al gráfico con los nombres de cada uno, vemos que Eric Chinga es el más extremo por izquierda y tanto Álvaro Jofré como Joirge arancibia por derecha. La repartición ideológica es bastante consistente con las estimacones se han hecho anteriormente.
 
 ```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="60%", fig.align='center'}
 
-knitr::include_graphics("Results/tabla_subcom2.png")
+tabla_subcom2 <-readRDS("data/Final_data/tabla_subcom2.rds")
+
+tabla_subcom2$coord1D = cell_spec(tabla_subcom2$coord1D, color = ifelse(tabla_subcom2$coord1D < 0, "red", "blue"))
+
+kbl(tabla_subcom2, escape = F) %>%
+  kable_paper("striped", full_width = F)
 
 ```
 
-
-
+<br>
 
 ```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
 
@@ -121,8 +165,19 @@ knitr::include_graphics("Results/Plot_Subcom2.png")
 
 ```
 
-#### Análisis comisión de forma general
+<br>
 
+Vemos además que el votante mediano de la subcomisión 2 recaía en Julio Álvarez Pinto (PS) y que en general la dispersión ideológica si bien se mantiene fuertemente hacia la izquierda, es algo más equilibrada que la subcomisión 1, como veremos más adelante en el plano de comparación con el pleno de la convención constitucional. Además de eso, vemos que hay menos personas agrupadas a la derecha y un par màs de personas que hacen de "puentes" desde la centro-izquierda hacia la centro-derecha.
+
+Sin embargo el panorama es relativamente similar a la subcomisión 1: por como están distribuídos los votos, sería muy fácil que los sectores de izquierda puedan instalar sus artículos con facilidad, mientras que la derecha está obligada a hacer muchos esfuerzos de acercamiento ideológico para ganar votaciones.
+
+<br>
+
+#### **Análisis comisión de forma general**
+
+Al igual que en las subcomisiones, vemos que la dispersión ideológica se explica en buena medida por una sola dimensión. La dispersión ideológica general se asejema bastante a la de la subcomisión 1, donde hay una carga notora hacia la izquierda con un vacío importante en el centro.
+
+<br>
 
 
 ```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
@@ -131,6 +186,7 @@ knitr::include_graphics("Results/plot_comision_1d.png")
 
 ```
 
+<br>
 
 ```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
 
@@ -139,17 +195,20 @@ knitr::include_graphics("Results/plot_comision_2d.png")
 
 ```
 
+<br>
 
 ```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="60%", fig.align='center'}
 
-knitr::include_graphics("Results/tabla_comision_general.png")
+comision_general <-readRDS("data/Final_data/comision_general.rds")
+
+comision_general$coord1D = cell_spec(comision_general$coord1D, color = ifelse(comision_general$coord1D < 0, "red", "blue"))
+
+kbl(comision_general, escape = F) %>%
+  kable_paper("striped", full_width = F)
 
 ```
 
-
-
-
-
+<br>
 
 ```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
 
@@ -157,16 +216,39 @@ knitr::include_graphics("Results/Plot_comision_general.png")
 
 ```
 
+<br>
+
+### **Análisis del pleno de la Convención Constitucional**
+
+<br>
+
+```{r,echo=FALSE, message=FALSE,warning=FALSE, out.width="100%", fig.align='center'}
+
+knitr::include_graphics("Results/Plot_pleno.png")
+
+```
+
+<br>
+
+### **Comparación de éxito entre comisión y pleno**
+
+<br>
+
+## **Conclusiones**
+
+## **Anexo**
+
+### **Tabla completa de estimaciones ideológicas del pleno de la convención Constitucional**
+
+```{r, echo=FALSE, results='asis'}
+
+#pleno_general <-readRDS("data/Final_data/tabla_pleno.rds")
+
+#pleno_general$coord1D = cell_spec(pleno_general$coord1D, color = ifelse(pleno_general$coord1D < 0, "red", "blue"))
 
 
+#kbl(pleno_general, escape = F) %>%
+#  kable_paper("striped", full_width = F)
+#knitr::kable(pleno_general, align = "cccccc")
 
-### Análisis del pleno de la Convención Constitucional
-
-
-### Comparación de éxito entre comisión y pleno
-
-
-## Conclusiones
-
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```
