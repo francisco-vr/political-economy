@@ -12,7 +12,8 @@ ipak <- function(pkg){
 
 # usage
 
-packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable", "modelsummary")
+packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable",
+              "modelsummary", "data.table")
 ipak(packages)
 
 entrada <-read_csv("data/Input_data/votos_comision_Forma de Estado.csv")
@@ -256,9 +257,10 @@ pleno <-read_csv("data/Input_data/resumen_votos_para_rollcallApr_10.csv")
 
 
 # preparamos la base de datos
-
+#
+votos <-pleno[,c(1,2,78,677)]
 constituyente <-pleno[,2]
-tidyft::utf8_encoding(constituyente)
+x <-pleno[,1]
 
 
 pleno <- pleno[,-c(1,2)] # en la parte de datos solo deben quedar los votos
@@ -276,18 +278,22 @@ rc_pleno <- rollcall(pleno,
 result <- wnominate(rc_pleno, dims=1, polarity=97) # Se utilida a Montealegre en base a la estimacion de Fabrega (2021)
 summary(result) # el objeto results contiene la estimacion
 
+plot(result)
+
 pleno_general <-data.frame(constituyente,result$legislators)
 pleno_general <-pleno_general[,c(1,6,7,8)]
 pleno_general <-pleno_general[order(pleno_general$coord1D), c(1,2,3,4)]
-pleno_general$rank <-rank(as.numeric(pleno_general$coord1D))
+pleno_general$rank <-rank(pleno_general$coord1D)
 
 saveRDS(pleno_general, file = "data/Final_data/tabla_pleno.rds")
 
 knitr::kable(pleno_general)
 
 
+##AGREGAR COLUMNAS DE VOTACIÓN PARA VER PORCENTAJE DE ÉXITO
 
-Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = as.numeric(rank))) +
+
+Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = rank)) +
   geom_point()+ 
   geom_line()+
   geom_text(label = pleno_general$candidato, nudge_y = 0.3, check_overlap = T)+
@@ -310,6 +316,31 @@ ggsave(Plot_pleno, filename = "Results/Plot_pleno.png",
        dpi = 400, width = 15, height = 20)
 
 
+##PLOTEANDO ÉXITO
+
+pleno_voto <-merge(x = pleno_general, y = votos, by = "candidato")
+
+Plot_pleno <-ggplot(pleno_voto, aes(x = coord1D, y = rank, color = as.character(X15032022_06))) +
+  geom_point()+ 
+  geom_line()+
+  geom_text(label = pleno_general$candidato, nudge_y = 0.3, check_overlap = T)+
+  labs(y = "Ranking",
+       x = "Coordenadas",
+       title= "Estimación Ideológica del Pleno de la Convención Constitucional y votantes pivotales",
+       subtitle = "1 dimensión",
+       caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
+  geom_vline(xintercept = -0.33147427, colour = "green", linetype = "dashed")+
+  geom_vline(xintercept = -0.67978555, colour = "red", linetype = "dashed")+
+  geom_vline(xintercept = -0.41015172, colour = "blue", linetype = "dashed")+
+  theme(axis.text = element_text(size = 10),
+        axis.title= element_text(size=16,face="bold"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.caption = element_text(size = 14),
+        panel.grid.major = element_line(colour = "grey70", size = 0.2),
+        panel.grid.minor = element_blank())
+
+dggsave(Plot_pleno, filename = "Results/Plot_pleno_vot.png",
+       dpi = 400, width = 15, height = 20)
 
 
 
