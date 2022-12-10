@@ -253,9 +253,13 @@ ggsave(Plot_comision_general, filename = "Results/Plot_comision_general.png",
 
 pleno <-read_csv("data/Input_data/resumen_votos_para_rollcallApr_10.csv")
 
+
 # preparamos la base de datos
 
 constituyente <-pleno[,2]
+utf8_encoding(constituyente)
+
+
 pleno <- pleno[,-c(1,2)] # en la parte de datos solo deben quedar los votos
 
 # para correr wnominate se crea el objeto de clase rollcall
@@ -278,9 +282,7 @@ pleno_general$rank <-rank(as.numeric(pleno_general$coord1D))
 
 saveRDS(pleno_general, file = "Results/comision_general.rds")
 
-xtable(pleno_general)
-
-
+knitr::kable(pleno_general)
 
 
 
@@ -290,19 +292,21 @@ Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = as.numeric(rank))) +
   geom_text(label = pleno_general$candidato, nudge_y = 0.3, check_overlap = T)+
   labs(y = "Ranking",
        x = "Coordenadas",
-       title= "Estimación Ideológica comision Forma del Estado",
+       title= "Estimación Ideológica del Pleno de la Convención Constitucional y votantes pivotales",
        subtitle = "1 dimensión",
-       caption = "Línea verde: votante mediano tanto para izquierda como derecha")+
+       caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
   geom_vline(xintercept = -0.33147427, colour = "green", linetype = "dashed")+
-  theme(axis.text = element_text(size = 15),
+  geom_vline(xintercept = -0.67978555, colour = "red", linetype = "dashed")+
+  geom_vline(xintercept = -0.41015172, colour = "blue", linetype = "dashed")+
+  theme(axis.text = element_text(size = 10),
         axis.title= element_text(size=16,face="bold"),
         plot.title = element_text(size = 18, face = "bold"),
         plot.caption = element_text(size = 14),
         panel.grid.major = element_line(colour = "grey70", size = 0.2),
         panel.grid.minor = element_blank())
 
-ggsave(Plot_comision_general, filename = "Results/Plot_comision_general.png",
-       dpi = 400, width = 15, height = 9)
+ggsave(Plot_pleno, filename = "Results/Plot_pleno.png",
+       dpi = 400, width = 15, height = 20)
 
 
 
