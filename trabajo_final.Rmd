@@ -197,6 +197,8 @@ knitr::include_graphics("Results/plot_comision_2d.png")
 
 <br>
 
+El histograma con los grados de corte muestra que gran parte de las iteraciones de las estimaciones cortan en los 90 grados, y el gráfico de líneas de corte muestra una marca hacia la izquierda pero principalmente vertical.`
+
 ```{r, echo=FALSE, message=FALSE,warning=FALSE, out.width="60%", fig.align='center'}
 
 comision_general <-readRDS("data/Final_data/comision_general.rds")
@@ -218,7 +220,16 @@ knitr::include_graphics("Results/Plot_comision_general.png")
 
 <br>
 
+Al analizar el gráfico general que incluye el votante mediado, vemos que nuevamente hay una fuerte carga a la izquierda con Eric Chinga como el de ideología diametralmente opuesta a la de jürguensen, quien a su vez correlaciona fuertemente con Pollyana Rivera por derecha. Existe una gran separación ideológica donde Eduardo Castillo (PPD) se acerca un poco más hacia el centro, pero aún así con una gran diferencia.
+
+Apoyándose en la teoría espacial del voto, vemos que en esta comisión hay una probabilidad bastante alta que los articulados e informes estén mucho más inclinados hacia la izquierda. pero, ¿Es esto representativo del pleno? Puede tener èxito en èl?
+
 ### **Análisis del pleno de la Convención Constitucional**
+
+<br>
+
+Para el análisis del pleno se optó por usar a Katherine Montealegre como la persona de derecha, usando las estimaciones iniciales por Fábrega, y al mismo tiempo se busca establecer un eje "liberal/conservador" con Agustín Squella como referencia liberal. Al revisar gráfico de dos dimensiones vemos que hay una buena parte explicada ya con un sólo eje (el cual profundizaremos), sin embargo vale la pena señalar que en el pleno se divide en cuatro grandes clusters: almenos tres grupos inclinados de drecha, algunos con más tendencia cercana a Squella (esquina superior izquierda) y otro grupo muy concentrado en la esquina inferior izquierda. Además vemos otro grupo fuertemente cargado a la derecha y un par de grupos más fragmentados y poco agrupados que están hacia el centro.
+
 
 <br>
 
@@ -229,26 +240,56 @@ knitr::include_graphics("Results/Plot_pleno.png")
 ```
 
 <br>
+<br>
 
-### **Comparación de éxito entre comisión y pleno**
+El gráfico expuesto muestra la relación entre votantes pivotales de la subcomisión 1 y subcomisión 2, donde la primera es al mismo tiempo la votante pivotal de la comisión en su conjunto. Bajo la estimación ideológica que hemos hecho, vemos que Tiare Aguilera, como pivotal de la comisión, está a 42 constituyentes de distancia de el votante pivotal del pleno de la convención, representado por Pedro muñoz (PS). Diferente es el caso de al subcomisión 2 que está bastante maś cerca del votante pivotal del pleno de la convención en comparación a la subcomisión 1 y la comisión general.
+
+Esta información indica que cuando el informe de la comisión ingrese al pleno, este va a ser constantemente rechazado ya que está creado en composiciones ideológicas muy distintas, donde la comisión tiene un pensamiento más extremo que el pleno. Es de esperar que el porcentaje de éxito sea muy bajo
+
+
+a continuación analizaremos el porcentaje de éxito
+
+### **Éxito de la comisión en votaciones del pleno**
+
+<br>
+
+
 
 <br>
 
 ## **Conclusiones**
 
+
+<br>
+<br>
+<br>
+
 ## **Anexo**
+
+
+### **Gráfico de dos dimensiones del Pleno de la convención constitucional**
+
+```{r, out.width="100%", fig.align='center'}
+
+knitr::include_graphics("Results/Plot2D_pleno.png")
+
+```
+
+
+
+<br>
 
 ### **Tabla completa de estimaciones ideológicas del pleno de la convención Constitucional**
 
 ```{r, echo=FALSE, results='asis'}
 
-#pleno_general <-readRDS("data/Final_data/tabla_pleno.rds")
+pleno_general <-readRDS("data/Final_data/tabla_pleno.rds")
 
-#pleno_general$coord1D = cell_spec(pleno_general$coord1D, color = ifelse(pleno_general$coord1D < 0, "red", "blue"))
+pleno_general$coord1D = cell_spec(pleno_general$coord1D, color = ifelse(pleno_general$coord1D < 0, "red", "blue"))
 
 
-#kbl(pleno_general, escape = F) %>%
-#  kable_paper("striped", full_width = F)
+kbl(pleno_general, escape = F) %>%
+  kable_paper("striped", full_width = F)
 #knitr::kable(pleno_general, align = "cccccc")
 
 ```

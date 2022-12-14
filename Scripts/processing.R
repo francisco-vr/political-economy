@@ -12,7 +12,8 @@ ipak <- function(pkg){
 
 # usage
 
-packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable", "modelsummary")
+packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable",
+              "modelsummary", "data.table")
 ipak(packages)
 
 entrada <-read_csv("data/Input_data/votos_comision_Forma de Estado.csv")
@@ -252,13 +253,15 @@ ggsave(Plot_comision_general, filename = "Results/Plot_comision_general.png",
 ## ANÁLISIS DEL PLENO COMPLETO
 
 
-pleno <-read_csv("data/Input_data/resumen_votos_para_rollcallApr_10.csv")
+pleno <-read_csv("data/Input_data/scrap_votos_plenari_final.csv")
 
 
 # preparamos la base de datos
-
+#
+votos <-dplyr::select(pleno, "nombre", `1022`, `1023`,`1071`,`1070`,`1069`,`1068`,`1067`,`1066`,`1065`,`1132`:`1224`,
+                      `1892`:`1908`, `1970`:`2044`) #Elegir columnas correctas para ver el match de votos con comisión
 constituyente <-pleno[,2]
-tidyft::utf8_encoding(constituyente)
+x <-pleno[,1]
 
 
 pleno <- pleno[,-c(1,2)] # en la parte de datos solo deben quedar los votos
@@ -276,24 +279,102 @@ rc_pleno <- rollcall(pleno,
 result <- wnominate(rc_pleno, dims=1, polarity=97) # Se utilida a Montealegre en base a la estimacion de Fabrega (2021)
 summary(result) # el objeto results contiene la estimacion
 
+plot(result)
+
 pleno_general <-data.frame(constituyente,result$legislators)
 pleno_general <-pleno_general[,c(1,6,7,8)]
 pleno_general <-pleno_general[order(pleno_general$coord1D), c(1,2,3,4)]
-pleno_general$rank <-rank(as.numeric(pleno_general$coord1D))
+pleno_general$rank <-rank(pleno_general$coord1D)
 
 saveRDS(pleno_general, file = "data/Final_data/tabla_pleno.rds")
 
-knitr::kable(pleno_general)
 
 
+##AGREGAR COLUMNAS DE VOTACIÓN PARA VER PORCENTAJE DE ÉXITO
 
-Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = as.numeric(rank))) +
+Encoding(pleno_general[[1]]) <-"UTF-8"
+
+
+Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = rank)) +
+  geom_point()+ 
+  geom_line()+
+  geom_text(label = pleno_general$nombre, nudge_y = 0.3, check_overlap = T)+
+  labs(y = "Ranking",
+       x = "Coordenadas",
+       title= "Estimación Ideológica del Pleno de la Convención Constitucional y votantes pivotales",
+       subtitle = "1 dimensión",
+       caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
+  geom_vline(xintercept = -0.281722039, colour = "green", linetype = "dashed")+
+  geom_vline(xintercept = -0.660621226, colour = "red", linetype = "dashed")+
+  geom_vline(xintercept = -0.332806796, colour = "blue", linetype = "dashed")+
+  theme(axis.text = element_text(size = 10),
+        axis.title= element_text(size=16,face="bold"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.caption = element_text(size = 14),
+        panel.grid.major = element_line(colour = "grey70", size = 0.2),
+        panel.grid.minor = element_blank())
+
+ggsave(Plot_pleno, filename = "Results/Plot_pleno.png",
+       dpi = 400, width = 15, height = 24)
+
+
+##PLOTEANDO ÉXITO
+
+
+pleno_voto <-merge(x = pleno_general, y = votos, by = "nombre")
+pleno_voto <-pleno_voto[order(pleno_general$coord1D), ]
+pleno_voto$rank <-rank(pleno_voto$coord1D)
+
+saveRDS(pleno_voto, file = "data/Final_data/pleno_votos.RDS")
+
+
+Encoding(pleno_general[[1]]) <-"UTF-8"
+
+
+loop.vector <-6:139
+
+for (i in 6:ncol(pleno_voto)){
+  
+ p <-ggplot(pleno_voto, aes(x = coord1D, y = rank, color = as.character(pleno_voto[,i]))) +
+   geom_point()+ 
+   geom_line()+
+   geom_text(label = pleno_voto$nombre, nudge_y = 0.3, check_overlap = T)+
+   labs(y = "Ranking",
+        x = "Coordenadas",
+        title= "Votos en pleno de convención relativos a la comisión Formas del Estado",
+        subtitle = paste("Voto", i-5),
+        caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
+     scale_color_discrete(name = "Votación", labels = c("En contra", "A favor"))+
+     geom_vline(xintercept = -0.33147427, colour = "green", linetype = "dashed")+
+   geom_vline(xintercept = -0.67978555, colour = "red", linetype = "dashed")+
+   geom_vline(xintercept = -0.41015172, colour = "blue", linetype = "dashed")+
+   theme(axis.text = element_text(size = 10),
+         axis.title= element_text(size=16,face="bold"),
+         plot.title = element_text(size = 18, face = "bold"),
+         plot.caption = element_text(size = 12),
+         panel.grid.major = element_line(colour = "grey70", size = 0.2),
+         panel.grid.minor = element_blank())
+ 
+ nombres <-pleno_voto[,6:139]%>%
+   print(colnames(nombres))
+  
+  fp <-file.path("Results/gif_plot/", paste0(print(pleno_voto,colnames(i),".png")))
+  
+  
+  ggsave(p, filename = fp, device = png, dpi = 300, width = 18, height = 22)
+  
+}
+
+saveRDS(pleno_voto, file = "data/Final_data/pleno_votos_comision.RDS")
+
+
+Plot_pleno_voto <-ggplot(pleno_voto, aes(x = coord1D, y = rank, color = as.character(X15032022_06))) +
   geom_point()+ 
   geom_line()+
   geom_text(label = pleno_general$candidato, nudge_y = 0.3, check_overlap = T)+
   labs(y = "Ranking",
        x = "Coordenadas",
-       title= "Estimación Ideológica del Pleno de la Convención Constitucional y votantes pivotales",
+       title= "Votaciones a favor y en contra cruzada con estimación ideológica",
        subtitle = "1 dimensión",
        caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
   geom_vline(xintercept = -0.33147427, colour = "green", linetype = "dashed")+
@@ -306,10 +387,8 @@ Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = as.numeric(rank))) +
         panel.grid.major = element_line(colour = "grey70", size = 0.2),
         panel.grid.minor = element_blank())
 
-ggsave(Plot_pleno, filename = "Results/Plot_pleno.png",
+ggsave(Plot_pleno_voto, filename = "Results/Plot_pleno_vot.png",
        dpi = 400, width = 15, height = 20)
-
-
 
 
 
