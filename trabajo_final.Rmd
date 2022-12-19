@@ -32,9 +32,11 @@ En el siguiente trabajo de analizará el desempeño que tuvo la comisión "forma
 
 ## **Propuesta de análisis y métodos**
 
-Para observar si la comisión tuvo efecto en imponer su vision en el pleno de la convencion, primero observaremos la composicion ideologica de la comision en general y de las subcomisiones en particular. luego de ello analizaremos la composicion ideologica del pleno y observadremos las diferencias entre lña posicion ideologica del votante medio y pivotal, respectivamente.
+Para observar si la comisión tuvo efecto en imponer su vision en el pleno de la convencion, primero observaremos la composicion ideologica de la comision en general y de las subcomisiones en particular. luego de ello analizaremos la composicion ideologica del pleno y observadremos las diferencias entre la posicion ideologica del votante medio y pivotal, respectivamente.
 
 Luego se realizará un análisis del éxito de la comisión en base a las votaciones a favor en el pleno.
+
+Para esto usaremos el lenguaje de programación R, en particular el paquete ```anonimate``` para la estimación ideológica en base a los votos de cada convencional, tanto en la comisión como en el pleno.
 
 <br>
 
@@ -166,7 +168,7 @@ knitr::include_graphics("Results/Plot_Subcom2.png")
 ```
 
 <br>
-
+ 
 Vemos además que el votante mediano de la subcomisión 2 recaía en Julio Álvarez Pinto (PS) y que en general la dispersión ideológica si bien se mantiene fuertemente hacia la izquierda, es algo más equilibrada que la subcomisión 1, como veremos más adelante en el plano de comparación con el pleno de la convención constitucional. Además de eso, vemos que hay menos personas agrupadas a la derecha y un par màs de personas que hacen de "puentes" desde la centro-izquierda hacia la centro-derecha.
 
 Sin embargo el panorama es relativamente similar a la subcomisión 1: por como están distribuídos los votos, sería muy fácil que los sectores de izquierda puedan instalar sus artículos con facilidad, mientras que la derecha está obligada a hacer muchos esfuerzos de acercamiento ideológico para ganar votaciones.
@@ -253,15 +255,32 @@ a continuación analizaremos el porcentaje de éxito
 
 <br>
 
+Para analizar el éxito del pleno sobre la convención se analizazrá en tres periodios distintos: el período de evaluación del informe 1, 2 y 3, expresados en la variable "grupo". El supuesto adyacenbte es que el primer informe representa el producto más "puro" de la comisión forma de Estado, mientras que los informes 2 y 3 (grupos 2 y 3 en la tabla) representan las formas más moderadas de dicho informe, el cual involucran principalmente el análisis en particular y por inciso de cada propuesta al pleno. Lamentablemente por disponibilidad de datos y por la dinámica de votación, no podemos hacer un análisis de la votación en general por cada informe, ya que en el primer informe se pidió analizar en particular por sobre el general, y porque en el tercer informe no tenemos datos disponibles.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+tabla <-readRDS("data/Final_data/tabla_votos_informe.RDS")
+
+
+modelsummary::datasummary_crosstab(grupo ~ resultado, statistic = 1 ~ Percent("row"), data = tabla)
+
+
+```
 
 
 <br>
+
+Observamos que el porcentaje de aprobación de todo el informe 1 es bastante mayor al que esperabamos en base a las estimaciones ideológicas, con casi un 60% de aprobación de artículos relativos a dicho informe. Sin embargo en la medida en que el trabajo de la comisión debería "moderarse", vemos que al mismo tiempo la tasa de aprobación de sus propuestas es cada vez menos, llegango a un prácticmaente 40% de de aprobación de artículos vs un 60% de rechazo de ellos, inviertiendo la proporción entre el primer y tercer informe. Al mismo tiempo la taza de abstenciónes y no votantes aumentó.
+
 
 ## **Conclusiones**
 
+<br>
 
-<br>
-<br>
+En conclusión y atendiendo a la consigna original, vemos que la comisión, a pesar de su ideología que estaba bastante más alejada a la del votante pivotal del pleno, pudo de todas formas imponer su visión e n un porcentaje bastante alto del total de votaciones que correspondían a dicha comisión. Una hipótesis interesante que no podemos trabajar acá es si el porcentaje de rechazo se debe pŕincipalmente a las propuestas de la subcomisión 1 en desmedro de la subcomisión 2 que era más moderada, pero los datos no están subdidividos de esta forma por lo que se tendría que convinar un análisis cualitativo de archivo para poder mejorar y robustecer la base de datos de votaciones y poder hacer la distinción.
+
+
 <br>
 
 ## **Anexo**
