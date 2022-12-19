@@ -12,7 +12,7 @@ ipak <- function(pkg){
 
 # usage
 
-packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable",
+packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","dplyr", "tidyverse","xtable",
               "modelsummary", "data.table", "magick")
 ipak(packages)
 
@@ -258,8 +258,7 @@ pleno <-read_csv("data/Input_data/scrap_votos_plenari_final.csv")
 
 # preparamos la base de datos
 #
-votos <-dplyr::select(pleno, "nombre", `1036`:`1065`,`1119`:`1221`,`1069`,`1068`,`1067`,`1066`,`1065`,`1132`:`1224`,
-                      `1892`:`1908`, `1970`:`2044`) #Elegir columnas correctas para ver el match de votos con comisión
+votos <-dplyr::select(pleno, "nombre", `1065`:`1074`,`1132`:`1224`,`1908`,`1907`,`1970`:`2043`) #Elegir columnas correctas para ver el match de votos con comisión
 constituyente <-pleno[,2]
 x <-pleno[,1]
 
@@ -342,9 +341,9 @@ for (i in 6:ncol(pleno_voto)){
         subtitle = paste("Voto", i-5),
         caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
      scale_color_discrete(name = "Votación", labels = c("En contra", "A favor"))+
-     geom_vline(xintercept = -0.33147427, colour = "green", linetype = "dashed")+
-   geom_vline(xintercept = -0.67978555, colour = "red", linetype = "dashed")+
-   geom_vline(xintercept = -0.41015172, colour = "blue", linetype = "dashed")+
+     geom_vline(xintercept = -0.33147427, colour = "green", linetype = "longdash")+
+   geom_vline(xintercept = -0.67978555, colour = "red", linetype = "longdash")+
+   geom_vline(xintercept = -0.41015172, colour = "blue", linetype = "longdash")+
    theme(axis.text = element_text(size = 10),
          axis.title= element_text(size=16,face="bold"),
          plot.title = element_text(size = 18, face = "bold"),
