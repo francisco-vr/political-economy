@@ -294,10 +294,10 @@ saveRDS(pleno_general, file = "data/Final_data/tabla_pleno.rds")
 Encoding(pleno_general[[1]]) <-"UTF-8"
 
 
-Plot_pleno <-ggplot(pleno_general, aes(x = coord1D, y = rank)) +
+Plot_pleno <-ggplot(pleno_voto, aes(x = coord1D, y = rank)) +
   geom_point()+ 
   geom_line()+
-  geom_text(label = pleno_general$nombre, nudge_y = 0.3, check_overlap = T)+
+  geom_text(label = pleno_voto$nombre, nudge_y = 0.3, check_overlap = T)+
   labs(y = "Ranking",
        x = "Coordenadas",
        title= "Estimación Ideológica del Pleno de la Convención Constitucional y votantes pivotales",
@@ -327,70 +327,33 @@ pleno_voto$rank <-rank(pleno_voto$coord1D)
 saveRDS(pleno_voto, file = "data/Final_data/pleno_votos.RDS")
 
 
-pleno_voto <-readRDS("data/Final_data/pleno_votos.RDS")
 
-for (i in 6:ncol(pleno_voto)){
-  
- p <-ggplot(pleno_voto, aes(x = coord1D, y = rank, color = as.character(pleno_voto[,i]))) +
-   geom_point()+ 
-   geom_line()+
-   geom_text(label = pleno_voto$nombre, nudge_y = 0.3, check_overlap = T)+
-   labs(y = "Ranking",
-        x = "Coordenadas",
-        title= "Votos en pleno de convención relativos a la comisión Formas del Estado",
-        subtitle = paste("Voto", i-5),
-        caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
-     scale_color_discrete(name = "Votación", labels = c("En contra", "A favor"))+
-     geom_vline(xintercept = -0.33147427, colour = "green", linetype = "longdash")+
-   geom_vline(xintercept = -0.67978555, colour = "red", linetype = "longdash")+
-   geom_vline(xintercept = -0.41015172, colour = "blue", linetype = "longdash")+
-   theme(axis.text = element_text(size = 10),
-         axis.title= element_text(size=16,face="bold"),
-         plot.title = element_text(size = 18, face = "bold"),
-         plot.caption = element_text(size = 12),
-         panel.grid.major = element_line(colour = "grey70", size = 0.2),
-         panel.grid.minor = element_blank())
+tablas <-read.csv("data/Input_data/fechas_votaciones_cortado.csv")
 
-  
-  fp <-file.path("Results/gif_plot/", paste0(i-5,".png"))
-  
-  
-  ggsave(p, filename = fp, device = png, dpi = 150, width = 15, height = 15)
-  
-}
+tab_informe_1 <-tablas[c(1:119),]
+
+tab_informe_1$grupo <-1
+
+tab_informe_2 <-tablas[c(120:203),]
+tab_informe_2$grupo <-2
+
+tab_informe_3 <-tablas[c(204:446),]
+tab_informe_3$grupo <-3
+
+tabla <-as.data.frame(rbind(tab_informe_1, tab_informe_2, tab_informe_3))
 
 
-imgs <- list.files("Results/gif_plot",full.names = TRUE)
-img_list <- lapply(imgs, image_read)
-
-img_joined <- image_join(img_list)
-
-img_animated <- image_animate(img_joined, fps = 3)
-
-saveRDS(pleno_voto, file = "data/Final_data/pleno_votos_comision.RDS")
+saveRDS(tabla, file = "data/Final_data/tabla_votos_informe.RDS")
 
 
-Plot_pleno_voto <-ggplot(pleno_voto, aes(x = coord1D, y = rank, color = as.character(X15032022_06))) +
-  geom_point()+ 
-  geom_line()+
-  geom_text(label = pleno_general$candidato, nudge_y = 0.3, check_overlap = T)+
-  labs(y = "Ranking",
-       x = "Coordenadas",
-       title= "Votaciones a favor y en contra cruzada con estimación ideológica",
-       subtitle = "1 dimensión",
-       caption = "Línea verde: votante pivotal para la izquierda en el pleno de la convención. \n Línea roja: votante medio subcomisión 1 y comisión Forma del Estado en general. \n Linea azul: votante medio subcomisión 2")+
-  geom_vline(xintercept = -0.33147427, colour = "green", linetype = "dashed")+
-  geom_vline(xintercept = -0.67978555, colour = "red", linetype = "dashed")+
-  geom_vline(xintercept = -0.41015172, colour = "blue", linetype = "dashed")+
-  theme(axis.text = element_text(size = 10),
-        axis.title= element_text(size=16,face="bold"),
-        plot.title = element_text(size = 18, face = "bold"),
-        plot.caption = element_text(size = 14),
-        panel.grid.major = element_line(colour = "grey70", size = 0.2),
-        panel.grid.minor = element_blank())
 
-ggsave(Plot_pleno_voto, filename = "Results/Plot_pleno_vot.png",
-       dpi = 400, width = 15, height = 20)
+
+
+
+
+
+modelsummary::datasummary_df(tablas)
+
 
 
 
