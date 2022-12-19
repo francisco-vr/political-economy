@@ -13,7 +13,7 @@ ipak <- function(pkg){
 # usage
 
 packages <- c("foreign","gdata","wnominate","MCMCpack","pscl","anonimate","oc", "dplyr", "tidyverse","xtable",
-              "modelsummary", "data.table")
+              "modelsummary", "data.table", "magick")
 ipak(packages)
 
 entrada <-read_csv("data/Input_data/votos_comision_Forma de Estado.csv")
@@ -258,7 +258,7 @@ pleno <-read_csv("data/Input_data/scrap_votos_plenari_final.csv")
 
 # preparamos la base de datos
 #
-votos <-dplyr::select(pleno, "nombre", `1022`, `1023`,`1071`,`1070`,`1069`,`1068`,`1067`,`1066`,`1065`,`1132`:`1224`,
+votos <-dplyr::select(pleno, "nombre", `1036`:`1065`,`1119`:`1221`,`1069`,`1068`,`1067`,`1066`,`1065`,`1132`:`1224`,
                       `1892`:`1908`, `1970`:`2044`) #Elegir columnas correctas para ver el match de votos con comisión
 constituyente <-pleno[,2]
 x <-pleno[,1]
@@ -328,10 +328,7 @@ pleno_voto$rank <-rank(pleno_voto$coord1D)
 saveRDS(pleno_voto, file = "data/Final_data/pleno_votos.RDS")
 
 
-Encoding(pleno_general[[1]]) <-"UTF-8"
-
-
-loop.vector <-6:139
+pleno_voto <-readRDS("data/Final_data/pleno_votos.RDS")
 
 for (i in 6:ncol(pleno_voto)){
   
@@ -354,16 +351,22 @@ for (i in 6:ncol(pleno_voto)){
          plot.caption = element_text(size = 12),
          panel.grid.major = element_line(colour = "grey70", size = 0.2),
          panel.grid.minor = element_blank())
- 
- nombres <-pleno_voto[,6:139]%>%
-   print(colnames(nombres))
+
   
-  fp <-file.path("Results/gif_plot/", paste0(print(pleno_voto,colnames(i),".png")))
+  fp <-file.path("Results/gif_plot/", paste0(i-5,".png"))
   
   
-  ggsave(p, filename = fp, device = png, dpi = 300, width = 18, height = 22)
+  ggsave(p, filename = fp, device = png, dpi = 150, width = 15, height = 15)
   
 }
+
+
+imgs <- list.files("Results/gif_plot",full.names = TRUE)
+img_list <- lapply(imgs, image_read)
+
+img_joined <- image_join(img_list)
+
+img_animated <- image_animate(img_joined, fps = 3)
 
 saveRDS(pleno_voto, file = "data/Final_data/pleno_votos_comision.RDS")
 
